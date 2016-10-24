@@ -7,6 +7,5 @@ from rfaUtils import getLog,qaprint
 
 log = getLog()
 
-message = "It is working, right?"
+message = 'It is working, right?'
 qaprint(log,message)
-
