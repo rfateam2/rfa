@@ -5,14 +5,15 @@ Created on Oct 20, 2016
 @author: korvinca, group2
 '''
 
-from rfa_utils import getlog
+from rfaUtils import getlog,qaprint
 
 def printlog():
-    """ Print the message in log folder
+    """ Print the message
     """
+    log = getlog()
     message = "It is working, right?"
-    LOG.info(message)
+    qaprint(log, message)
+
 
 if __name__ == '__main__':
-    LOG = getlog()
     printlog()

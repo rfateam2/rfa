@@ -12,7 +12,9 @@ import logging
 
 
 def getlog(log_name=None, log_dir=None):
-    """ Create log file in the log_dir
+    """ Create log file:
+    - with name "testrun" if log_name is None
+    - in the local directory if log_dir is None
     """
     if not log_name:
         log_name = "testrun"
@@ -23,11 +25,10 @@ def getlog(log_name=None, log_dir=None):
     try:
         log = logging.getLogger()
         log.setLevel(logging.INFO)
-        hdlr = logging.FileHandler((os.path.join(log_dir + '/' + log_name)
-                                    (+ "_%s.log" % str(get_cur_time()))))
-        formatter = logging.Formatter('%(asctime)s % (filename)s'
-                                      '[LINE %(lineno)d] %(levelname)s:'
-                                      ' %(message)s')
+        hdlr = logging.FileHandler(os.path.join(log_dir + '/' + log_name + "_%s.log"
+                                                % str(get_cur_time())))
+        formatter = logging.Formatter('%(asctime)s %(filename)s '
+                                      '[LINE %(lineno)d] %(levelname)s: %(message)s')
         hdlr.setFormatter(formatter)
         log.addHandler(hdlr)
         handler_stream = logging.StreamHandler()
@@ -39,21 +40,19 @@ def getlog(log_name=None, log_dir=None):
         return -1
     return log
 
+def get_cur_time():
+    """ Return timestamp
+    """
+    time_str = datetime.datetime.fromtimestamp(time.time()).strftime('%Y%m%d_%H:%M')
+    return time_str
+
 def dir_create(dirname):
     """ Create a new directory
     """
     if not os.path.isdir(dirname):
         os.makedirs(dirname)
 
-def get_cur_time():
-    """ return int timestamps
+def qaprint(log, message):
+    """ Print message with INFO level in the log file and console
     """
-    time_str = datetime.datetime.fromtimestamp(
-        time.time()).strftime('%Y%m%d_%H%M')
-    return time_str
-
-def qaprint(message):
-    """ Print message in log file and console.
-    """
-    log = getlog()
     log.info(message)
