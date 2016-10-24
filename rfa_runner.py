@@ -5,24 +5,14 @@ Created on Oct 20, 2016
 @author: korvinca, group2
 '''
 
-from rfa_utils import getlog, qaprint
+from rfa_utils import getlog
 
 def printlog():
-    """ Print the message
-    """
-    test_name = 'assignment_01'
-    log = getlog(test_name)
-    message = "It is working, right?"
-    log.info(message)
-    log.error(message)
-
-
-def printlog_v1():
-    """ Print the message var. 1
+    """ Print the message in log folder
     """
     message = "It is working, right?"
-    qaprint(message)
+    LOG.info(message)
 
 if __name__ == '__main__':
+    LOG = getlog()
     printlog()
-    printlog_v1()
