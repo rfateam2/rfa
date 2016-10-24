@@ -9,4 +9,3 @@ log = getLog()
 
 message = "It is working, right?"
 qaprint(log,message)
-
