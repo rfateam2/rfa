@@ -33,4 +33,6 @@ def getLog():
 def qaprint(log, string):
     print string #pass string to screen
     log.write(string + '\n') #pass string to log file
-    #log.close()
+
+def close_log(log):
+    log.close()

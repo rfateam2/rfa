@@ -6,6 +6,6 @@ Created on Oct 19, 2016
 from rfaUtils import getLog,qaprint
 
 log = getLog()
-
 message = "It is working, right?"
 qaprint(log,message)
+close_log(log)
