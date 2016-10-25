@@ -1,9 +1,8 @@
-'''
+"""
 Created on Oct 23, 2016
 
 @author: skiftestdqa
-'''
-
+"""
 import time
 import os
 
@@ -14,7 +13,7 @@ def getCurTime():
 
 def getLog():
     try:
-        # create directory named "logs"        
+        # create directory named "logs"
         log_dir = "logs"
         # create file name
         timestr = getCurTime()
@@ -31,7 +30,4 @@ def qaprint(log,string):
     # print string to console
     print string
     # write to file and go to new line
-    log.write(string + "\n") 
-    
-    
-    
+    log.write(string + "\n")
