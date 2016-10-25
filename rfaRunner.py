@@ -1,12 +1,12 @@
 '''
-Created on Oct 19, 2016
+Created on Oct 25, 2016
 
-@author: sashaalexander
+@author: salamatb
 '''
 from rfaUtils import getLog,qaprint
 
 log = getLog()
 
-message = "It is working, right?"
+message = "It is working?"
 qaprint(log,message)
 
