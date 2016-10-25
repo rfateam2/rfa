@@ -1,9 +1,9 @@
 '''
-Created on Oct 19, 2016
+Created on Oct 23, 2016
 
-@author: sashaalexander
+@author: skiftestqa
 '''
-from rfaUtils import getLog,qaprint
+from RAF_CODE_01.rfaUtils import getLog,qaprint
 
 log = getLog()
 
