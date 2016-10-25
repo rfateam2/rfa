@@ -13,7 +13,7 @@ def getCurTime():
     return time_stamp
 
 def getLog():
-        try:
+    try:
         #variables for directory path, time stamp and file name
         dir_path = os.path.dirname(os.path.realpath(__file__))+'/logs/'
         time_stamp = getCurTime()
