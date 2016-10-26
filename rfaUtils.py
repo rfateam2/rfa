@@ -65,4 +65,3 @@ def close_log(log):
             log.close()
         except OSError as err:
             print err
-            sys.exit(1)
