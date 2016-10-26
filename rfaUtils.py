@@ -7,13 +7,19 @@ import os
 import datetime
 import sys
 
-def get_cur_time():
+def get_cur_time(sec=None):
+    """ Return time stamp as string
+    """
     #get today time and format it
     today = datetime.datetime.now()
-    time_stamp = today.strftime('%Y%m%d_%H:%M')
+    if not sec:
+        time_stamp = today.strftime('%Y%m%d_%H:%M')
+    time_stamp = today.strftime('%Y%m%d_%H:%M:%S')
     return time_stamp
 
 def create_dir(dir_path):
+    """ Create a new directory
+    """
     #if logs directory does not exist -> create it
     if not os.path.exists(dir_path):
         try:    
@@ -23,24 +29,30 @@ def create_dir(dir_path):
             sys.exit(1)
 
 def get_log():
+    """ creates a log file and returns file handler
+    """
+    #variables for directory path, time stamp and file name
+    dir_path = os.path.dirname(os.path.realpath(__file__))+'/logs/'
+    create_dir(dir_path)
+    time_stamp = get_cur_time()
+    file_name = dir_path + "testrun_" + time_stamp + ".log"
     try:
-        #variables for directory path, time stamp and file name
-        dir_path = os.path.dirname(os.path.realpath(__file__))+'/logs/'
-        create_dir(dir_path)
-        time_stamp = get_cur_time()
-        file_name = dir_path + "testrun_" + time_stamp + ".log"
         log = open(file_name, 'a') #create and open log in append mode
         return log
-
     except OSError as er:
         print er
         return -1
 
 def qa_print(log, string):
+    """ prints message and writs message to the log file
+    """
     print string #pass string to screen
-    log.write(string + '\n') #pass string to log file
+    time_stamp = get_cur_time(sec=True)
+    log.write(time_stamp + ' ' + string + '\n') #pass string to log file
 
 def close_log(log):
+    """ Close the log file
+    """
     #if log file exists -> close it
     if os.path.isfile(log.name):
         try:
