@@ -18,10 +18,12 @@ def getlog(log_name=None, log_dir=None):
     """
     if not log_name:
         log_name = "testrun"
+
     if not log_dir:
         log_dir = '.'
-    else:
-        dir_create(log_dir)
+        
+    dir_create(log_dir)
+    
     try:
         log = logging.getLogger()
         log.setLevel(logging.INFO)
