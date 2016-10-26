@@ -32,18 +32,15 @@ def get_log(log_dir=None, log_name=None):
     """ creates a log file and returns file handler
     """
     if not log_dir:
-        log_dir = '.'
-    else:
-        dir_create(log_dir)
-
+        log_dir = '..'
     if not log_name:
         log_name = "testrun"
         
     #variables for directory path, time stamp and file name
-    dir_path = os.path.dirname(os.path.realpath(__file__)) + '/' + log_dir + '/'
+    dir_path = os.path.dirname(os.path.realpath(__file__)) + '/' + log_dir
     create_dir(dir_path)
     time_stamp = get_cur_time()
-    file_name = dir_path + log_name + "_" + time_stamp + ".log"
+    file_name = dir_path + "/" + log_name + "_" + time_stamp + ".log"
     try:
         log = open(file_name, 'a') #create and open log in append mode
         return log
