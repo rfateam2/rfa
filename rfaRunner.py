@@ -3,10 +3,9 @@ Created on Oct 19, 2016
 
 @author: sashaalexander
 '''
-from rfaUtils import getLog,qaprint
+from rfaUtils import get_log, qa_print, close_log
 
-log = getLog()
-
+log = get_log()
 message = "It is working, right?"
-qaprint(log,message)
-
+qa_print(log, message)
+close_log(log)
