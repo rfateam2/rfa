@@ -32,7 +32,7 @@ def get_log(log_dir=None, log_name=None):
     """ creates a log file and returns file handler
     """
     if not log_dir:
-        log_dir = '..'
+        log_dir = 'logs'
     if not log_name:
         log_name = "testrun"
         
