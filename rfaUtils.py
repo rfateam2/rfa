@@ -12,9 +12,10 @@ def get_cur_time(sec=None):
     """
     #get today time and format it
     today = datetime.datetime.now()
-    if not sec:
+    if sec:
+        time_stamp = today.strftime('%Y%m%d_%H:%M:%S')
+    else:
         time_stamp = today.strftime('%Y%m%d_%H:%M')
-    time_stamp = today.strftime('%Y%m%d_%H:%M:%S')
     return time_stamp
 
 def create_dir(dir_path):
