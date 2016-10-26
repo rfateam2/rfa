@@ -12,8 +12,10 @@ def getLog():
     if not os.path.exists(directory):
         os.makedirs(directory)
     
-    fileName = 'testrun_' + getCurTime().strftime('%Y%m%d_%H:%M') + '.log'    
-    return open(directory + '/' + fileName, 'w+')
+    file_name = 'testrun_' + getCurTime().strftime('%Y%m%d_%H:%M') + '.log'
+    full_path = os.path.join(directory, file_name)
+    
+    return open(full_path, 'a')
 
 
 def qaprint(log, message):    
