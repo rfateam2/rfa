@@ -54,8 +54,7 @@ def dir_create(dirname):
         except OSError as err:
             print err
             return exit(1)
-        
-        
+
 def qaprint(log, message):
     """ Print message with INFO level in the log file and console
     """
