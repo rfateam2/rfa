@@ -1,6 +1,5 @@
 '''
 Created on Oct 20, 2016
-
 @author: nixer (team#2)
 '''
 import os
@@ -12,17 +11,21 @@ def getCurTime():
     time_stamp = today.strftime('%Y%m%d_%H:%M')
     return time_stamp
 
+def check_dir(dir_path):
+    #if logs directory does not exist -> create it
+    try:
+        if not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+    except OSError as er:
+        print er
+
 def getLog():
     try:
         #variables for directory path, time stamp and file name
         dir_path = os.path.dirname(os.path.realpath(__file__))+'/logs/'
         time_stamp = getCurTime()
         file_name = dir_path + "testrun_" + time_stamp + ".log"
-
-        #if logs directory does not exist -> create it
-        if not os.path.exists(dir_path):
-            os.makedirs(dir_path)
-
+        check_dir(dir_path)
         log = open(file_name, 'a') #create and open log in append mode
         return log
 
