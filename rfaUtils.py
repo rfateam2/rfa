@@ -4,6 +4,7 @@ Created on Oct 20, 2016
 '''
 import os
 import datetime
+import sys
 
 def getCurTime():
     #get today time and format it
@@ -11,13 +12,15 @@ def getCurTime():
     time_stamp = today.strftime('%Y%m%d_%H:%M')
     return time_stamp
 
-def check_dir(dir_path):
+def create_dir(dir_path):
     #if logs directory does not exist -> create it
-    try:
-        if not os.path.exists(dir_path):
+    if not os.path.exists(dir_path):
+        try:    
             os.makedirs(dir_path)
-    except OSError as er:
-        print er
+        except Exception, er:
+            print >> sys.stderr, "Unable to create 'logs' directory"
+            print >> sys.stderr, "Exception: %s" % str(er)
+            sys.exit(1)
 
 def getLog():
     try:
@@ -25,7 +28,7 @@ def getLog():
         dir_path = os.path.dirname(os.path.realpath(__file__))+'/logs/'
         time_stamp = getCurTime()
         file_name = dir_path + "testrun_" + time_stamp + ".log"
-        check_dir(dir_path)
+        create_dir(dir_path)
         log = open(file_name, 'a') #create and open log in append mode
         return log
 
