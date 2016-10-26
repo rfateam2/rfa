@@ -49,8 +49,13 @@ def dir_create(dirname):
     """ Create a new directory
     """
     if not os.path.isdir(dirname):
-        os.makedirs(dirname)
-
+        try:
+            os.makedirs(dirname)
+        except OSError as err:
+            print err
+            return exit(1)
+        
+        
 def qaprint(log, message):
     """ Print message with INFO level in the log file and console
     """
