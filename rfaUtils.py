@@ -25,8 +25,8 @@ def create_dir(dir_path):
     if not os.path.exists(dir_path):
         try:    
             os.makedirs(dir_path)
-        except OSError as er:
-            print er
+        except OSError as err:
+            print err
             sys.exit(1)
 
 def get_log(log_dir=None, log_name=None):
@@ -45,15 +45,15 @@ def get_log(log_dir=None, log_name=None):
     try:
         log = open(file_name, 'a') #create and open log in append mode
         return log
-    except OSError as er:
-        print er
+    except OSError as err:
+        print err
         return -1
 
 def qa_print(log, string):
     """ prints message and writs message to the log file
     """
     time_stamp = get_cur_time(sec=True)
-    print (time_stamp + ' ' + string) #pass string to screen
+    print time_stamp + ' ' + string #pass string to screen
     log.write(time_stamp + ' ' + string + '\n') #pass string to log file
 
 def close_log(log):
@@ -63,6 +63,6 @@ def close_log(log):
     if os.path.isfile(log.name):
         try:
             log.close()
-        except OSError as er:
-            print er
+        except OSError as err:
+            print err
             sys.exit(1)
