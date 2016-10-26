@@ -51,8 +51,8 @@ def get_log(log_dir=None, log_name=None):
 def qa_print(log, string):
     """ prints message and writs message to the log file
     """
-    print string #pass string to screen
     time_stamp = get_cur_time(sec=True)
+    print (time_stamp + ' ' + string) #pass string to screen
     log.write(time_stamp + ' ' + string + '\n') #pass string to log file
 
 def close_log(log):
