@@ -1,7 +1,7 @@
 '''
 Created on Oct 20, 2016
 
-@author: nixer, korvinca (team#2)
+@author: team#2
 '''
 import os
 import datetime
