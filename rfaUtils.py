@@ -56,12 +56,12 @@ def qa_print(log, string):
     print time_stamp + ' ' + string #pass string to screen
     log.write(time_stamp + ' ' + string + '\n') #pass string to log file
 
-def close_log(log):
+def close_log(logpath):
     """ Close the log file
     """
-    #if log file exists -> close it
-    if os.path.isfile(log.name):
+    #if log file is opened -> close it
+    with open(logpath, 'r') as logfile:
         try:
-            log.close()
-        except OSError as err:
-            print err
+            logfile.close()
+        except IOError:
+            print "Log file is not opened."
