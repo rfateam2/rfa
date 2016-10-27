@@ -1,7 +1,7 @@
 '''
 Created on Oct 19, 2016
 
-@author: sashaalexander
+@author: team#2
 '''
 from rfaUtils import get_log, qa_print, close_log
 
