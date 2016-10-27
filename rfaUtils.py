@@ -12,9 +12,9 @@ def get_cur_time(sec=None):
     #get today time and format it
     today = datetime.datetime.now()
     if sec:
-        time_stamp = today.strftime('%Y%m%d_%H:%M:%S')
+        time_stamp = today.strftime('%Y%m%d_%H-%M-%S')
     else:
-        time_stamp = today.strftime('%Y%m%d_%H:%M')
+        time_stamp = today.strftime('%Y%m%d_%H-%M')
     return time_stamp
 
 def create_dir(dir_path):
@@ -41,8 +41,15 @@ def get_log(log_dir=None, log_name=None):
     create_dir(dir_path)
     time_stamp = get_cur_time()
     file_name = dir_path + "/" + log_name + "_" + time_stamp + ".log"
-    try:
-        log = open(file_name, 'a') #create and open log in append mode
+    try:        
+        if os.path.isfile(file_name):    
+            i = 1
+            while os.path.exists(file_name):
+                file_name = dir_path + "/" + log_name + "_" + time_stamp + "_#" + str(i).zfill(2) + ".log"
+                i += 1
+            log = open(file_name, 'a')
+        else:    
+            log = open(file_name, 'a') #create and open log in append mode
         return log, file_name
     except OSError as err:
         print err
