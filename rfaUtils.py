@@ -1,6 +1,5 @@
 '''
 Created on Oct 20, 2016
-
 @author: team#2
 '''
 import os
@@ -23,7 +22,7 @@ def create_dir(dir_path):
     """
     #if logs directory does not exist -> create it
     if not os.path.exists(dir_path):
-        try:    
+        try:
             os.makedirs(dir_path)
         except OSError as err:
             print err
@@ -36,7 +35,7 @@ def get_log(log_dir=None, log_name=None):
         log_dir = 'logs'
     if not log_name:
         log_name = "testrun"
-        
+
     #variables for directory path, time stamp and file name
     dir_path = os.path.dirname(os.path.realpath(__file__)) + '/' + log_dir
     create_dir(dir_path)
@@ -44,7 +43,7 @@ def get_log(log_dir=None, log_name=None):
     file_name = dir_path + "/" + log_name + "_" + time_stamp + ".log"
     try:
         log = open(file_name, 'a') #create and open log in append mode
-        return log
+        return log, file_name
     except OSError as err:
         print err
         return -1
