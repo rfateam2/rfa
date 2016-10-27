@@ -30,7 +30,9 @@ def getlog(log_name=None, log_dir=None):
         log.setLevel(logging.INFO)
         hdlr = logging.FileHandler(os.path.join(log_dir + '/' + log_name + "_%s.log"
                                                 % str(get_cur_time())))
-        formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s')
+        formatter = logging.Formatter('%(asctime)s %(filename)s '
+                                      '[LINE %(lineno)d] %(levelname)s: '
+                                      '%(message)s')
         hdlr.setFormatter(formatter)
         log.addHandler(hdlr)
         handler_stream = logging.StreamHandler()
