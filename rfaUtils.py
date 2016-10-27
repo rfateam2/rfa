@@ -9,6 +9,7 @@ import os
 import datetime
 import time
 import logging
+import sys
 
 
 def getlog(log_name=None, log_dir=None):
@@ -21,9 +22,9 @@ def getlog(log_name=None, log_dir=None):
 
     if not log_dir:
         log_dir = '.'
-        
+
     dir_create(log_dir)
-    
+
     try:
         log = logging.getLogger()
         log.setLevel(logging.INFO)
@@ -33,18 +34,22 @@ def getlog(log_name=None, log_dir=None):
         hdlr.setFormatter(formatter)
         log.addHandler(hdlr)
         handler_stream = logging.StreamHandler()
-        handler_stream.setFormatter(formatter)
         handler_stream.setLevel(logging.INFO)
+        handler_stream.setFormatter(formatter)
         log.addHandler(handler_stream)
     except OSError as err:
         print err
         return -1
     return log
 
-def get_cur_time():
-    """ Return timestamp
+def get_cur_time(sec=None):
+    """ Return time stamp as string
     """
-    time_str = datetime.datetime.fromtimestamp(time.time()).strftime('%Y%m%d_%H:%M')
+    if not sec:
+        time_str = datetime.datetime.fromtimestamp(time.time()).strftime('%Y%m%d%H%M')
+    else:
+        # with seconds
+        time_str = datetime.datetime.fromtimestamp(time.time()).strftime('%Y%m%d%H%M%S')
     return time_str
 
 def dir_create(dirname):
@@ -55,7 +60,7 @@ def dir_create(dirname):
             os.makedirs(dirname)
         except OSError as err:
             print err
-            return exit(1)
+            return sys.exit(1)
 
 def qaprint(log, message):
     """ Print message with INFO level in the log file and console
