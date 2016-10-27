@@ -34,7 +34,7 @@ def get_log(log_dir=None, log_name=None):
     if not log_dir:
         log_dir = 'logs'
     if not log_name:
-        log_name = "testrun"
+        log_name = "rfaRunner"
 
     #variables for directory path, time stamp and file name
     dir_path = os.path.dirname(os.path.realpath(__file__)) + '/' + log_dir
