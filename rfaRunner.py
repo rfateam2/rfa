@@ -1,16 +1,27 @@
-
 '''
-RAF
-Created on Oct 20, 2016
-@author: team#2
+Created on Oct 19, 2016
+
+
+@author: sashaalexander
+@author: team 2
 '''
+from rfaUtils import getLog,qaPrint
 
-from rfaUtils import get_log, qa_print, close_log
+import sys
 
-log = get_log()
-# (log_file mode, log_file path)
+# get the log file handle
+log = getLog()
+
+# exit if log creation failed
+if log == -1:
+    sys.exit("Unable to create log file")
+
 message = "It is working, right?"
-loghd = log[0]
-qa_print(loghd, message)
-logpath = log[1]
-close_log(logpath)
+
+# call qaPrint to print a message with timestamp and write it to the log file
+qaPrint(log, message)
+qaPrint(log, "Me like what me see")
+
+# close the log file if it open
+if not log.closed:
+    log.close()
