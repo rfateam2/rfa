@@ -4,9 +4,9 @@ Created on Oct 19, 2016
 @author: sashaalexander
 @author: georgy.stepiko
 '''
-from rfaUtils import getLog,qaPrint, dropLog  # @UnresolvedImport
+from rfaUtils import getLog, qaPrint, dropLog
 
 log = getLog()
 message = "It is working, right?"
-qaPrint(log,message)
+qaPrint(log, message)
 dropLog(log)
