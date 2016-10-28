@@ -3,7 +3,7 @@ Created on Oct 19, 2016
 
 
 @author: sashaalexander
-@author: team X
+@author: team 2
 '''
 from rfaUtils import getLog,qaPrint
 

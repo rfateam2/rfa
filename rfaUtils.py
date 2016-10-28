@@ -2,7 +2,7 @@
 Created on Oct 19, 2016
 
 @author: sashaalexander
-@author: team X
+@author: team 2
 '''
 from datetime import datetime
 import os
