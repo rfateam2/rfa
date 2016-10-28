@@ -21,7 +21,7 @@ def getlog(log_name=None, log_dir=None):
         log_name = "testrun"
 
     if not log_dir:
-        log_dir = '.'
+        log_dir = 'logs'
 
     dir_create(log_dir)
 
@@ -29,7 +29,7 @@ def getlog(log_name=None, log_dir=None):
         log = logging.getLogger()
         log.setLevel(logging.INFO)
         hdlr = logging.FileHandler(os.path.join(log_dir + '/' + log_name + "_%s.log"
-                                                % str(get_cur_time())))
+                                                % str(get_cur_time(sec=True))))
         formatter = logging.Formatter('%(asctime)s %(filename)s '
                                       '[LINE %(lineno)d] %(levelname)s: '
                                       '%(message)s')
