@@ -65,15 +65,16 @@ def getLocalEnv(loc_prop_file):
         return -1
 
 def getTestCases(trid):    
-    keys = ('tcid', 'rest_URL', 'HTTP_method', 'HTTP_RC_desired', 'param_list')
-    test_cases = []
+    keys = ('rest_URL', 'HTTP_method', 'HTTP_RC_desired', 'param_list')
+#   keys = ('tcid','rest_URL', 'HTTP_method', 'HTTP_RC_desired', 'param_list')
+    test_cases = {}
     try:
         with open(trid+".txt") as f:
             tc_list = f.readlines()
         for i in range(0, len(tc_list)):
             tc = tc_list[i].split("|")                    
-            dictionary = dict(zip(keys, map(str.strip, tc)))
-            test_cases.append(dictionary)      
+            dictionary = dict(zip(keys, map(str.strip, tc[1:])))
+            test_cases[tc[0]] = dictionary      
         return test_cases
     except (OSError, IOError):
         # return -1 in case of exception
