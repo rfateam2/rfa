@@ -74,7 +74,9 @@ def getTestCases(trid):
         for i in range(0, len(tc_list)):
             tc = tc_list[i].split("|")                    
             dictionary = dict(zip(keys, map(str.strip, tc[1:])))
-            test_cases[tc[0]] = dictionary      
+            param_list = dictionary['param_list'].split(',')
+            dictionary['param_list'] = param_list
+            test_cases[int(tc[0])] = dictionary      
         return test_cases
     except (OSError, IOError):
         # return -1 in case of exception
