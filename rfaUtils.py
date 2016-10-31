@@ -7,39 +7,51 @@ Created on Oct 19, 2016
 '''
 from datetime import datetime
 import os
-import sys
 
 
 def getTestCases(trid=None):
     """
     Function will read corresponding id.txt file.
     Function will return that dictionary or -1 in case of error
-    and will try to explain the reason
+    and will try to explain the reason.
     """
-    fname = "42.txt"
+    # trid = "44.txt"
+    message = ""
     try:
-        handle = open(fname)
-    except:
-        raise
-        return -1
-    req_keys = ["rest_URL", "HTTP_method", "HTTP_RC_desired", "param_list"]
-    res_suite = dict()
-    for line in handle:
-        line = line.rstrip()
-        if len(line) < 1 : continue
-        req_values = line.split("|")
-        test_num = int(req_values[0])
-        req_values = req_values[1:]
-        one_test = dict(zip(req_keys, req_values))
-        res_suite[test_num] = one_test
-    if len(res_suite) < 1:
+        handle = open(trid)
+    except IOError as message:
         res_suite = -1
-    print res_suite
-    return res_suite
-
-
-    #lst.append(])
-#print lst
+    else:
+        # can be accepted by argument or changed here
+        req_keys = ["rest_URL", "HTTP_method", "HTTP_RC_desired", "param_list"]
+        res_suite = dict()
+        for line in handle:
+            line = line.rstrip()
+            if len(line) < 1 : continue
+            req_values = line.split("|")
+            test_num = int(req_values[0])
+            # get list of values w/o value of key "tcid"
+            req_values = req_values[1:]
+            # merge to dictionaries
+            one_test = dict(zip(req_keys, req_values))
+            try:
+                # Change type of the value
+                if "HTTP_RC_desired" in one_test:
+                    # change value to int if the key is "HTTP_RC_desired"
+                    one_test["HTTP_RC_desired"] = int(one_test["HTTP_RC_desired"])
+                if "param_list" in one_test:
+                    # change value to list if the key is "param_list"
+                    one_test["param_list"] = one_test["param_list"].split(",")
+            except ValueError as message:
+                print "Error with changing type of the value:", message
+                break
+            # append sub-dictionaries with test to result
+            res_suite[test_num] = one_test
+        if len(res_suite) < 1:
+            message = "Dictionary is empty, nothing to return."
+            res_suite = -1
+    # print res_suite, message
+    return res_suite, message
 
 def getLocalEnv(prop_file):
     """
