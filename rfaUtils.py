@@ -30,6 +30,36 @@ def getLog(tcNum, logDir):
         print 'Unable to create/open Log file. Reason: ' + er
         return -1
 
+def getTestCases(trid, guide):
+    '''extract testcases from file provided
+    accordint to argument value
+    CRIT: if failed - exit
+    Reason: we ahve no complete test scope
+    '''
+    highDict = {}#prepare dict
+    lister = (guide.split('|', 1)[1]).split('|')#cook keys list
+    tridFile = os.path.dirname(os.path.realpath(__file__)) + '/' + trid + '.txt'#cook filepath
+    if os.path.isfile(tridFile):#chrck file exists
+        try:#OK - try to open
+            rawTrun = open (tridFile)
+        except OSError as er:
+            sys.exit('CRIT: unable to open testrun file file to read. Reason: ' + er)#bye!
+    else:#NOK - exit with  message
+        sys.exit('CRIT: mandatory \'' + trid + '.txt\' file is lost. Please verify your setup.')#bye!
+    for line in rawTrun:#collect sub-dictionary for each testcase
+        subDict = {}#prepare empty dictionary
+        root = line.split('|', 1)#get testcase ID for key
+        inner = root[1].strip().split('|')#get other fields to cook sub-dictionary of this testcase
+        subDict = dict(zip(lister, inner))#each lister key has it's own value from line So is is allowed?
+        for item in lister:#check are all the fields present in new sub-dictionary
+            if item in subDict:
+                pass
+            else:#if not - bad news (Q: may it make sense just skip this testcase...)
+                sys.exit('CRIT: ' + trid + '.txt file format is corrupted! Another mandatory \'' + item + '\' field is lost. Please, verify your setup!')
+        subDict['param_list'] = subDict['param_list'].split(',')#param_list is declared as list of parameters
+        highDict[root[0]] = subDict#another value is sub-dictionary
+    return highDict#return dictionary cooked
+
 def getLocalEnv(props, mProps):
     '''gets all the values from local.properties (hardcoded) file
     CRITICAL: any error here will cause sys.exit - unable to continue if function failed
@@ -56,17 +86,16 @@ def getLocalEnv(props, mProps):
             sys.exit('CRIT: mandatory property \"' + guy + '\" is lost in local.properties file!')
     return propDict#it was long way to return cooked dictionary with all the midair checks passed
 
-def getTridFullPath(guys, tridguy):
+def getTridFullPath(guys, tridGuy):
     '''get test run ID from the argument lists
     the most of checks are in extArg so here special check only
     '''
-    tridNum = extArg(guys, tridguy)#extract --testrun=%value% from arguments list - refer extrArg for details
+    tridNum = extArg(guys, tridGuy)#extract --testrun=%value% from arguments list - refer extrArg for details
     if int(tridNum) in range(10001):#make sure it is in 0..10000 range
         pass#OK
     else:
         sys.exit('\'--testrun=%trid%\' argument must be INT value from 0 through 10000!')#trid is out of range or is not INT
     return tridNum
-
 
 def qaPrint(log, line):
     '''Print log message
