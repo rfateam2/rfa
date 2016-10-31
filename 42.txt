@@ -1,0 +1,5 @@
+01|/auth/login|post|200|username,password
+02|/auth/whoami|get|200|username
+03|/report/get|get|200|username,uuid=85e0be081f7e4c1b9234451fff6964c3
+04|/report/get_full|get|200|username,uuid=85e0be081f7e4c1b9234451fff6964c3
+05|/auth/logout|post|200|username
