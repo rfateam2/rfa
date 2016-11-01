@@ -12,16 +12,14 @@ import os
 def getTestCases(trid):
     """
     Function will read corresponding id.txt file.
-    Function will return that dictionary or -1 in case of error
-    and will try to explain the reason.
+    Function will return that dictionary or -1 in case of error and will try to explain the reason.
     """
     try:
         handle = open(trid)
     except IOError as err:
-        print "Failed to open file with error:", err
-        return -1
+        return -1, "Failed to open file with error: %s" % err
     else:
-        # can be accepted by argument or changed here to change value to int
+        # can be accepted by argument or changed here to change the value to integer
         req_keys = ["rest_URL", "HTTP_method", "HTTP_RC_desired", "param_list"]
         res_suite = dict()
         count = 0
@@ -36,28 +34,24 @@ def getTestCases(trid):
             one_test = dict(zip(req_keys, req_values))
             try:
                 # Change type of the value
-                # Better to do it here after merge dict
-                # make the function more universal
+                # Better to do it here after merge dictionaries, make the function more universal
                 if "HTTP_RC_desired" in one_test:
-                    # change value to int if the key is "HTTP_RC_desired"
+                    # change value to integer if the key is "HTTP_RC_desired"
                     try:
                         one_test["HTTP_RC_desired"] = int(one_test["HTTP_RC_desired"])
                     except ValueError as err:
-                        print "Error with changing type of the value:", err
-                        return -1
+                        return -1, err
                 if "param_list" in one_test:
                     # change value to list if the key is "param_list"
                     one_test["param_list"] = one_test["param_list"].split(",")
                 count += 1
             except ValueError as err:
-                print "Error with changing type of the value:", err
-                return -1
+                return -1, err
             # append sub-dictionaries with test to result
             res_suite[test_num] = one_test
-        if len(res_suite) != count:
-            print "Tests Cases dictionary is broken, nothing to return."
-            return -1
-    return res_suite
+        if len(res_suite) != count or len(res_suite) < 1:
+            return -1, "Tests Cases dictionary doesn't mapping with input items."
+        return res_suite
 
 def getLocalEnv(prop_file):
     """
@@ -65,7 +59,7 @@ def getLocalEnv(prop_file):
     where 1 value of the file becomes key and second value becomes a value.
     """
     prop_set = dict()
-    # list for integers
+    # list key's for change value to integer
     list_for_int = ["debug_mode", 'test_server_port', 'test_db_port', 'verbose_log_mode']
     try:
         handle = open(prop_file)
@@ -80,26 +74,27 @@ def getLocalEnv(prop_file):
             req_values = line.split("=")
             try:
                 if req_values[0] in list_for_int:
-                    # change value to int if the key is from list list_for_int
+                    # change the value to integer if the key exist in the list "list_for_int"
                     try:
                         req_values[1] = int(req_values[1])
                     except ValueError as err:
                         print "Filed to change type of the value in local.parametrs:", err
                         return -1
-                # append pear in dictionary
+                # append pair in dictionary
                 prop_set[req_values[0]] = req_values[1]
                 count += 1
-            except ValueError as err:
-                print "Error with changing type of the value:", err
-        if len(prop_set) != count:
-            print "Local Environment dictionary is broken, nothing to return."
+            except OSError as err:
+                print "Error with creating Local Environment dictionary:", err
+                return -1
+        if len(prop_set) != count  or len(prop_set) < 1:
+            print "Local Environment dictionary doesn't mapping with input items."
             return -1
     return prop_set
 
+
 def getLog(log_dir_name, sc_name):
     """
-    Creates 'logs' directory, if it doesn't exist,
-    creates or opens a log file in 'logs' directory.
+    Creates 'logs' directory, if it doesn't exist, creates or opens a log file in 'logs' directory.
     """
     # assign a current working directory + '/logs' to log_dir variable (platform independent)
     log_dir = os.path.join(os.getcwd(), log_dir_name)
@@ -113,8 +108,9 @@ def getLog(log_dir_name, sc_name):
         # open log file with prefix and timestamp (platform independent) in Append mode
         log = open(os.path.join(log_dir, sc_name + "_" + getCurTime("%Y%m%d_%H-%M") + ".log"), "a")
         return log
-    except (OSError, IOError):
+    except (OSError, IOError) as err:
         # return -1 in case of exception
+        print "Failed to create log: %s" % err
         return -1
 
 
