@@ -12,24 +12,24 @@ import os
 from rfaUtils import getLog, qaPrint, getTestCases, getLocalEnv
 
 
-trid = 0
+trid_int = 0
 sc_name = ""
 local_dir = os.path.dirname(os.path.realpath(__file__))
 # get arguments
 for arg in sys.argv:
     if "testrun" in arg.lower():
         # get test suite number
-        trid = arg.split("=")[1]
+        trid_int = arg.split("=")[1]
     else:
         # get file name
         sc_name = arg.split(".")[0]
     # print trid, sc_name #optional
 
 # get path to testrun_id file
-trid = "/".join([local_dir, trid]) + ".txt"
+trid = "/".join([local_dir, trid_int]) + ".txt"
 
 # get path for local.properties file
-loc_prop_file =str("/".join([local_dir, "local.properties"]))
+loc_prop_file = str("/".join([local_dir, "local.properties"]))
 
 # get local.properties environment in dictionary
 prop_dict = getLocalEnv(loc_prop_file)

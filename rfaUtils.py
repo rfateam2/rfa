@@ -25,7 +25,7 @@ def getTestCases(trid):
         count = 0
         for line in handle:
             line = line.rstrip()
-            if len(line) < 1 : continue
+            if len(line) < 1: continue
             req_values = line.split("|")
             test_num = int(req_values[0])
             # get list of values w/o value of key "tcid"
@@ -70,7 +70,7 @@ def getLocalEnv(prop_file):
         count = 0
         for line in handle:
             line = line.rstrip()
-            if len(line) < 1 : continue
+            if len(line) < 1: continue
             req_values = line.split("=")
             try:
                 if req_values[0] in list_for_int:
