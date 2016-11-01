@@ -5,15 +5,10 @@ Created on Oct 19, 2016
 @author: sashaalexander
 @author: team 2
 '''
-from rfaUtils import getLog, qaPrint, getLocalEnv, getTestCases
+from rfaUtils import *
 import sys
 
-# processing of command-line arguments
-args = sys.argv[1].lower().split('=')
-if args[0] == '--testrun':
-    trid = args[1]
-else:
-    sys.exit('rfaRunner.py --testrun=<trid>')  
+trid = checkArgv()
 
 # get list of test_cases
 test_cases = getTestCases(trid)

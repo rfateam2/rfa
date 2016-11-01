@@ -6,6 +6,7 @@ Created on Oct 19, 2016
 '''
 from datetime import datetime
 import os
+import sys
 
 def getLog(logdir, trid):
     """
@@ -48,6 +49,21 @@ def getCurTime(date_time_format):
     date_time = datetime.now().strftime(date_time_format)
     return date_time
 
+def checkArgv():
+    # processing of command-line arguments
+    if len(sys.argv) != 2:
+        sys.exit('one argument is required: --testrun=<trid>')
+    else:
+        args = sys.argv[1].lower().split('=')
+        if args[0] == '--testrun':
+            trid = args[1]
+            if int(trid) in range(10001):
+                pass
+            else:
+                sys.exit('test run number should be in range [0-10000]')
+        else:
+            sys.exit('rfaRunner.py --testrun=<trid>')
+        return trid
 
 def getLocalEnv(loc_prop_file):
     '''
@@ -64,19 +80,22 @@ def getLocalEnv(loc_prop_file):
         # return -1 in case of exception
         return -1
 
-def getTestCases(trid):    
-    keys = ('rest_URL', 'HTTP_method', 'HTTP_RC_desired', 'param_list')
+def getTestCases(trid): 
+    '''
+    Reads the content of test_run_file to dictionary of dictionaries and returns it 
+    '''   
+    keys = ('rest_URL', 'HTTP_method', 'HTTP_RC_desired', 'param_list') # key tuple
 #   keys = ('tcid','rest_URL', 'HTTP_method', 'HTTP_RC_desired', 'param_list')
     test_cases = {}
     try:
         with open(trid+".txt") as f:
-            tc_list = f.readlines()
-        for i in range(0, len(tc_list)):
-            tc = tc_list[i].split("|")                    
-            dictionary = dict(zip(keys, map(str.strip, tc[1:])))
-            param_list = dictionary['param_list'].split(',')
-            dictionary['param_list'] = param_list
-            test_cases[int(tc[0])] = dictionary      
+            tc_list = f.readlines() # reads each line of test_run_file in list
+        for i in range(0, len(tc_list)): 
+            tc = tc_list[i].split("|") # split line and create a value list                     
+            dictionary = dict(zip(keys, map(str.strip, tc[1:]))) # merge key tuple and value list to dictionary
+            param_list = dictionary['param_list'].split(',') # split param_list and create a list
+            dictionary['param_list'] = param_list # replace value of param_list by new list
+            test_cases[int(tc[0])] = dictionary # append final dictionary to test_cases dictionary      
         return test_cases
     except (OSError, IOError):
         # return -1 in case of exception
