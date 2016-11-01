@@ -15,6 +15,7 @@ test_cases = getTestCases(trid)
 
 loc_prop = getLocalEnv('local.properties')
 log_dir = loc_prop['log_dir']
+print loc_prop
 
 # get the log file handle
 log = getLog(log_dir, trid)

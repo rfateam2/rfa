@@ -55,7 +55,7 @@ def checkArgv():
         sys.exit('one argument is required: --testrun=<trid>')
     else:
         args = sys.argv[1].lower().split('=')
-        if args[0] == '--testrun':
+        if args[0] == '--testrun' and args[1].isdigit() and len(args) > 1:
             trid = args[1]
             if int(trid) in range(10001):
                 pass
@@ -73,8 +73,15 @@ def getLocalEnv(loc_prop_file):
     try:
         with open(loc_prop_file) as f:
             for line in f:
-               (key, val) = line.split('=')
-               loc_prop[key] = val.strip()
+                try:
+                   (key, val) = line.split('=')
+                   val = val.strip()
+                   if val.isdigit(): # checking if value is digit -> convert to int
+                       val = int(val)
+                   loc_prop[key] = val
+                except ValueError as err:
+                    print "Local properties file has wrong format: ", err 
+                    return -1
         return loc_prop
     except (OSError, IOError):
         # return -1 in case of exception
@@ -85,7 +92,6 @@ def getTestCases(trid):
     Reads the content of test_run_file to dictionary of dictionaries and returns it 
     '''   
     keys = ('rest_URL', 'HTTP_method', 'HTTP_RC_desired', 'param_list') # key tuple
-#   keys = ('tcid','rest_URL', 'HTTP_method', 'HTTP_RC_desired', 'param_list')
     test_cases = {}
     try:
         with open(trid+".txt") as f:
