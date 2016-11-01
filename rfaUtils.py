@@ -2,7 +2,7 @@
 Created on Oct 19, 2016
 
 @author: sashaalexander
-@author: team 2
+@author: nixer (team#2)
 '''
 from datetime import datetime
 import os
@@ -101,6 +101,8 @@ def getTestCases(trid):
             dictionary = dict(zip(keys, map(str.strip, tc[1:]))) # merge key tuple and value list to dictionary
             param_list = dictionary['param_list'].split(',') # split param_list and create a list
             dictionary['param_list'] = param_list # replace value of param_list by new list
+            http_rc = int(dictionary['HTTP_RC_desired']) # convert HTTP_RC_desired value to int
+            dictionary['HTTP_RC_desired'] = http_rc # replace value of HTTP_RC_desired by new int value
             test_cases[int(tc[0])] = dictionary # append final dictionary to test_cases dictionary      
         return test_cases
     except (OSError, IOError):

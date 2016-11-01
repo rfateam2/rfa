@@ -7,11 +7,13 @@ Created on Oct 19, 2016
 '''
 from rfaUtils import *
 import sys
+import json
 
 trid = checkArgv()
 
 # get list of test_cases
 test_cases = getTestCases(trid)
+print(json.dumps(test_cases, indent = 4))
 
 loc_prop = getLocalEnv('local.properties')
 log_dir = loc_prop['log_dir']
