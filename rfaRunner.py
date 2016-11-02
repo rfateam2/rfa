@@ -13,13 +13,15 @@ from rfaUtils import getLog, qaPrint, getTestCases, getLocalEnv, checkArgv
 local_dir = os.path.dirname(os.path.realpath(__file__))
 
 # If we want to use any arguments with "=" in rfaRunner
-#arg_dict = checkArgv(sys.argv)
-#sc_name =arg_dict["file_name"]
-#trid_int = arg_dict["--testrun"]
-#print str(arg_dict)
-#print sc_name, trid_int
+"""
+arg_dict = checkArgv(sys.argv)
+sc_name =arg_dict["file_name"]
+trid_int = arg_dict["--testrun"]
+"""
 
 # get arguments here with argv
+if len(sys.argv) < 2:
+    sys.exit("ERROR: No script's arguments, nothing to execute.")
 for arg in sys.argv:
     if "testrun" in arg.lower():
         # get test suite number

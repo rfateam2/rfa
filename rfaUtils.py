@@ -10,7 +10,7 @@ import os
 
 def checkArgv(arg):
     # processing of command-line arguments
-    if len(arg) < 1:
+    if len(arg) < 2:
         print "No script's arguments, nothing to return"
         return -1
     else:
