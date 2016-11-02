@@ -3,10 +3,31 @@ Created on Oct 19, 2016
 
 @author: sashaalexander
 @author: team 2
-@author: korvinca
 '''
 from datetime import datetime
 import os
+
+
+def checkArgv(arg):
+    # processing of command-line arguments
+    if len(arg) < 1:
+        print "No script's arguments, nothing to return"
+        return -1
+    else:
+        # get arguments from input, create and return dictionary.
+        trid_dict = dict()
+        arg_fname = arg[0].split(".")
+        trid_dict["file_name"] = arg_fname[0]
+        for x in arg[1:]:
+            arg_item = x.split("=")
+            if "testrun" in x.lower():
+                arg_item[1] = int(arg_item[1])
+                if arg_item[1] not in range(10001):
+                    print "ERROR: The number of test case is out of range 1-10000"
+                    return -1
+            trid_dict[arg_item[0]] = arg_item[1]
+        # print trid_dict
+        return trid_dict
 
 
 def getTestCases(trid):
@@ -17,7 +38,7 @@ def getTestCases(trid):
     try:
         handle = open(trid)
     except IOError as err:
-        return -1, "Failed to open file with error: %s" % err
+        return -1, "ERROR: Failed to open file: %s" % err
     else:
         # can be accepted by argument or changed here to change the value to integer
         req_keys = ["rest_URL", "HTTP_method", "HTTP_RC_desired", "param_list"]
@@ -40,7 +61,7 @@ def getTestCases(trid):
                     try:
                         one_test["HTTP_RC_desired"] = int(one_test["HTTP_RC_desired"])
                     except ValueError as err:
-                        return -1, err
+                        return -1, "ERROR: Change type of value in local.paremetrs to integer", err
                 if "param_list" in one_test:
                     # change value to list if the key is "param_list"
                     one_test["param_list"] = one_test["param_list"].split(",")
@@ -50,7 +71,7 @@ def getTestCases(trid):
             # append sub-dictionaries with test to result
             res_suite[test_num] = one_test
         if len(res_suite) != count or len(res_suite) < 1:
-            return -1, "Tests Cases dictionary doesn't mapping with input items."
+            return -1, "ERROR: Tests Cases dictionary doesn't mapping with input items."
         return res_suite
 
 def getLocalEnv(prop_file):
@@ -64,7 +85,7 @@ def getLocalEnv(prop_file):
     try:
         handle = open(prop_file)
     except IOError as err:
-        print "Failed to open file with error:", err
+        print "ERROR: Failed to open file:", err
         return -1
     else:
         count = 0
@@ -78,16 +99,16 @@ def getLocalEnv(prop_file):
                     try:
                         req_values[1] = int(req_values[1])
                     except ValueError as err:
-                        print "Filed to change type of the value in local.parametrs:", err
+                        print "ERROR: Filed to change type of the value in local.parametrs:", err
                         return -1
                 # append pair in dictionary
                 prop_set[req_values[0]] = req_values[1]
                 count += 1
             except OSError as err:
-                print "Error with creating Local Environment dictionary:", err
+                print "ERROR: Creating Local Environment dictionary:", err
                 return -1
         if len(prop_set) != count  or len(prop_set) < 1:
-            print "Local Environment dictionary doesn't mapping with input items."
+            print "ERROR: Local Environment dictionary doesn't mapping with input items."
             return -1
     return prop_set
 
@@ -110,7 +131,7 @@ def getLog(log_dir_name, sc_name):
         return log
     except (OSError, IOError) as err:
         # return -1 in case of exception
-        print "Failed to create log: %s" % err
+        print "ERROR: Failed to create log: %s" % err
         return -1
 
 
