@@ -60,7 +60,7 @@ def checkArgv():
             if int(trid) in range(10001):
                 pass
             else:
-                sys.exit('test run number should be in range [0-10000]')
+                sys.exit('test run id should be in range [0-10000]')
         else:
             sys.exit('rfaRunner.py --testrun=<trid>')
         return trid
@@ -91,14 +91,14 @@ def getTestCases(trid):
     '''
     Reads the content of test_run_file to dictionary of dictionaries and returns it 
     '''   
-    keys = ('rest_URL', 'HTTP_method', 'HTTP_RC_desired', 'param_list') # key tuple
+    keys = ['rest_URL', 'HTTP_method', 'HTTP_RC_desired', 'param_list'] # key list
     test_cases = {}
     try:
         with open(trid+".txt") as f:
             tc_list = f.readlines() # reads each line of test_run_file in list
         for i in range(0, len(tc_list)): 
             tc = tc_list[i].split("|") # split line and create a value list                     
-            dictionary = dict(zip(keys, map(str.strip, tc[1:]))) # merge key tuple and value list to dictionary
+            dictionary = dict(zip(keys, map(str.strip, tc[1:]))) # merge key list and value list to dictionary
             param_list = dictionary['param_list'].split(',') # split param_list and create a list
             dictionary['param_list'] = param_list # replace value of param_list by new list
             http_rc = int(dictionary['HTTP_RC_desired']) # convert HTTP_RC_desired value to int
