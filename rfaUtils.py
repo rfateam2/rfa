@@ -49,7 +49,6 @@ def getTestCases(trid):
         # can be accepted by argument or changed here to change the value to integer
         req_keys = ["rest_URL", "HTTP_method", "HTTP_RC_desired", "param_list"]
         res_suite = dict()
-        count = 0
         for line in handle:
             line = line.rstrip()
             if len(line) < 1: continue
@@ -74,13 +73,10 @@ def getTestCases(trid):
                 if "param_list" in one_test:
                     # change value to list if the key is "param_list"
                     one_test["param_list"] = one_test["param_list"].split(",")
-                count += 1
             except ValueError as err:
                 return -1, err
             # append sub-dictionaries with test to result
             res_suite[test_num] = one_test
-        if len(res_suite) != count or len(res_suite) < 1:
-            return -1, "ERROR: Number of test cases is different in input and dictionary."
         return res_suite
 
 
@@ -98,7 +94,6 @@ def getLocalEnv(prop_file):
         print "ERROR: Failed to open file:", err
         return -1
     else:
-        count = 0
         for line in handle:
             line = line.rstrip()
             if len(line) < 1: continue
@@ -113,13 +108,9 @@ def getLocalEnv(prop_file):
                         return -1
                 # append pair in dictionary
                 prop_set[req_values[0]] = req_values[1]
-                count += 1
             except OSError as err:
                 print "ERROR: Creating Local Environment dictionary:", err
                 return -1
-        if len(prop_set) != count  or len(prop_set) < 1:
-            print "ERROR: Number of parameters is different in input and dictionary."
-            return -1
     return prop_set
 
 

@@ -16,7 +16,8 @@ local_dir = os.path.dirname(os.path.realpath(__file__))
 arg_dict = checkArgv(sys.argv)
 if arg_dict == -1:
     sys.exit("ERROR: Unable to crate the dictionary with arguments.")
-# print arg_dict # Print dict for check
+
+# print arg_dict # Print output for check
 
 # get path to testrun_id file
 trid = "/".join([local_dir, arg_dict["--testrun"]]) + ".txt"
@@ -28,12 +29,12 @@ loc_prop_file = str("/".join([local_dir, "local.properties"]))
 prop_dict = getLocalEnv(loc_prop_file)
 if prop_dict == -1:
     sys.exit("ERROR: Unable to crate the dictionary with local properties.")
-else:
-    # get folder name for log files
-    log_dir_name = prop_dict['log_dir']
+
+# print prop_dict # Print output for check
+
 
 # get the log file handle
-log = getLog(log_dir_name, arg_dict["file_name"])
+log = getLog(prop_dict["log_dir"], arg_dict["file_name"])
 # exit if log creation failed
 if log == -1:
     sys.exit("ERROR: Unable to create log file")
@@ -44,7 +45,7 @@ if test_cases == -1:
     qaPrint(log, test_cases)
     sys.exit("ERROR: Unable to get test cases from input file.")
 
-# qaPrint(log, str(test_cases)) # Print dict for check
+# qaPrint(log, str(test_cases)) # Print output for check
 
 # close the log file if it is opened
 if not log.closed:
