@@ -12,29 +12,14 @@ from rfaUtils import getLog, qaPrint, getTestCases, getLocalEnv, checkArgv
 
 local_dir = os.path.dirname(os.path.realpath(__file__))
 
-# If we want to use any arguments with "=" in rfaRunner
-"""
+# Pull arguments from cli to dictionary,split by "="
 arg_dict = checkArgv(sys.argv)
-sc_name =arg_dict["file_name"]
-trid_int = arg_dict["--testrun"]
-"""
-
-# get arguments here with argv
-if len(sys.argv) < 2:
-    sys.exit("ERROR: No script's arguments, nothing to execute.")
-for arg in sys.argv:
-    if "testrun" in arg.lower():
-        # get test suite number
-        trid_int = int(arg.split("=")[1])
-        if trid_int not in range(10001):
-            sys.exit("ERROR: The number of testcase %d is out of range 0-10000." % trid_int)
-    else:
-        # get file name
-        sc_name = arg.split(".")[0]
-    #print trid, sc_name #optional
+if arg_dict == -1:
+    sys.exit("ERROR: Unable to crate the dictionary with arguments.")
+# print arg_dict # Print dict for check
 
 # get path to testrun_id file
-trid = "/".join([local_dir, str(trid_int)]) + ".txt"
+trid = "/".join([local_dir, arg_dict["--testrun"]]) + ".txt"
 
 # get path for local.properties file
 loc_prop_file = str("/".join([local_dir, "local.properties"]))
@@ -48,19 +33,18 @@ else:
     log_dir_name = prop_dict['log_dir']
 
 # get the log file handle
-log = getLog(log_dir_name, sc_name)
+log = getLog(log_dir_name, arg_dict["file_name"])
 # exit if log creation failed
 if log == -1:
     sys.exit("ERROR: Unable to create log file")
 
 # get test cases into the dictionary
 test_cases = getTestCases(trid)
-# exit if got the errors with creating dictionary
 if test_cases == -1:
     qaPrint(log, test_cases)
-    sys.exit("ERROR: Unable to get test cases.")
-else:
-    qaPrint(log, str(test_cases)) # optional
+    sys.exit("ERROR: Unable to get test cases from input file.")
+
+# qaPrint(log, str(test_cases)) # Print dict for check
 
 # close the log file if it is opened
 if not log.closed:

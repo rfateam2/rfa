@@ -16,23 +16,29 @@ def checkArgv(arg):
     else:
         # get arguments from input, create and return dictionary.
         trid_dict = dict()
+        # Return name of file dictionary "file_name: value"
         arg_fname = arg[0].split(".")
         trid_dict["file_name"] = arg_fname[0]
+        # parsing other arguments below, split by "=" and append to dictionary
         for x in arg[1:]:
-            arg_item = x.split("=")
-            if "testrun" in x.lower():
-                arg_item[1] = int(arg_item[1])
-                if arg_item[1] not in range(10001):
-                    print "ERROR: The number of test case is out of range 1-10000"
-                    return -1
+            try:
+                arg_item = x.split("=")
+                arg_item[0] = arg_item[0].lower()
+                if "--testrun" in arg_item[0]:
+                    arg_item[1] = arg_item[1]
+                    if int(arg_item[1]) not in range(10001):
+                        print "ERROR: The number of test case is out of range 1-10000"
+                        return -1
+            except OSError as err:
+                print "ERROR: Failed to split arguments by '=': %s" % err
+                return -1
             trid_dict[arg_item[0]] = arg_item[1]
-        # print trid_dict
         return trid_dict
 
 
 def getTestCases(trid):
     """
-    Function will read corresponding id.txt file.
+    Function will read the corresponding id.txt file.
     Function will return that dictionary or -1 in case of error and will try to explain the reason.
     """
     try:
@@ -48,7 +54,10 @@ def getTestCases(trid):
             line = line.rstrip()
             if len(line) < 1: continue
             req_values = line.split("|")
-            test_num = int(req_values[0])
+            try:
+                test_num = int(req_values[0])
+            except ValueError as err:
+                return -1, "ERROR: Number of test ceses in local.paremetrs is not integer", err
             # get list of values w/o value of key "tcid"
             req_values = req_values[1:]
             # merge to dictionaries
@@ -71,8 +80,9 @@ def getTestCases(trid):
             # append sub-dictionaries with test to result
             res_suite[test_num] = one_test
         if len(res_suite) != count or len(res_suite) < 1:
-            return -1, "ERROR: Tests Cases dictionary doesn't mapping with input items."
+            return -1, "ERROR: Number of test cases is different in input and dictionary."
         return res_suite
+
 
 def getLocalEnv(prop_file):
     """
@@ -80,7 +90,7 @@ def getLocalEnv(prop_file):
     where 1 value of the file becomes key and second value becomes a value.
     """
     prop_set = dict()
-    # list key's for change value to integer
+    # list key's for change value to integer. TODO
     list_for_int = ["debug_mode", 'test_server_port', 'test_db_port', 'verbose_log_mode']
     try:
         handle = open(prop_file)
@@ -108,7 +118,7 @@ def getLocalEnv(prop_file):
                 print "ERROR: Creating Local Environment dictionary:", err
                 return -1
         if len(prop_set) != count  or len(prop_set) < 1:
-            print "ERROR: Local Environment dictionary doesn't mapping with input items."
+            print "ERROR: Number of parameters is different in input and dictionary."
             return -1
     return prop_set
 
