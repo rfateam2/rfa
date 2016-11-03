@@ -9,6 +9,9 @@ import os
 
 
 def checkArgv(arg):
+    """
+    Implement processing of command-line arguments: (argv)
+    """
     # processing of command-line arguments
     if len(arg) < 2:
         print "No script's arguments, nothing to return"
@@ -44,8 +47,11 @@ def getTestCases(trid):
     try:
         handle = open(trid)
     except IOError as err:
-        return -1, "ERROR: Failed to open file: %s" % err
+        return (-1, "ERROR: Failed to open file: %s" % err)
     else:
+        # Verification. Is file empty?
+        if os.stat(trid).st_size == 0:
+            return (-1, "ERROR: Fail %s is empty" % trid)
         # can be accepted by argument or changed here to change the value to integer
         req_keys = ["rest_URL", "HTTP_method", "HTTP_RC_desired", "param_list"]
         res_suite = dict()
@@ -56,7 +62,7 @@ def getTestCases(trid):
             try:
                 test_num = int(req_values[0])
             except ValueError as err:
-                return -1, "ERROR: Number of test ceses in local.paremetrs is not integer", err
+                return (-1, "ERROR: Number of test cases in local.paremetrs is not integer", err)
             # get list of values w/o value of key "tcid"
             req_values = req_values[1:]
             # merge to dictionaries
@@ -69,15 +75,15 @@ def getTestCases(trid):
                     try:
                         one_test["HTTP_RC_desired"] = int(one_test["HTTP_RC_desired"])
                     except ValueError as err:
-                        return -1, "ERROR: Change type of value in local.paremetrs to integer", err
+                        return (-1, "ERROR: Change type of value to integer in properties", err)
                 if "param_list" in one_test:
                     # change value to list if the key is "param_list"
                     one_test["param_list"] = one_test["param_list"].split(",")
             except ValueError as err:
-                return -1, err
+                return (-1, err)
             # append sub-dictionaries with test to result
             res_suite[test_num] = one_test
-        return res_suite
+        return (1, res_suite)
 
 
 def getLocalEnv(prop_file):
@@ -127,7 +133,7 @@ def getLog(log_dir_name, sc_name):
         # if logs directory(!) doesn't exist, create it
         if not os.path.isdir(log_dir):
             os.makedirs(log_dir)
-        # open log file with prefix and timestamp (platform independent) in Append mode
+        # open log file with prefix and time stamp (platform independent) in Append mode
         log = open(os.path.join(log_dir, sc_name + "_" + getCurTime("%Y%m%d_%H-%M") + ".log"), "a")
         return log
     except (OSError, IOError) as err:

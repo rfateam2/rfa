@@ -17,7 +17,7 @@ arg_dict = checkArgv(sys.argv)
 if arg_dict == -1:
     sys.exit("ERROR: Unable to crate the dictionary with arguments.")
 
-# print arg_dict # Print output for check
+#print arg_dict # Print output for check
 
 # get path to testrun_id file
 trid = "/".join([local_dir, arg_dict["--testrun"]]) + ".txt"
@@ -30,7 +30,7 @@ prop_dict = getLocalEnv(loc_prop_file)
 if prop_dict == -1:
     sys.exit("ERROR: Unable to crate the dictionary with local properties.")
 
-# print prop_dict # Print output for check
+#print prop_dict # Print output for check
 
 
 # get the log file handle
@@ -41,11 +41,11 @@ if log == -1:
 
 # get test cases into the dictionary
 test_cases = getTestCases(trid)
-if test_cases == -1:
-    qaPrint(log, test_cases)
-    sys.exit("ERROR: Unable to get test cases from input file.")
+if test_cases[0] == -1:
+    qaPrint(log, test_cases[1])
+    sys.exit("ERROR: Unable to get test cases from input file %s.txt" % arg_dict["--testrun"])
 
-# qaPrint(log, str(test_cases)) # Print output for check
+qaPrint(log, "INFO:" + str(test_cases))
 
 # close the log file if it is opened
 if not log.closed:
