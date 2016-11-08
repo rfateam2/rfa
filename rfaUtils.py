@@ -2,10 +2,11 @@
 Created on Oct 19, 2016
 
 @author: sashaalexander
-@author: team 2
+@author: team #2
 '''
-from datetime import datetime
+
 import os
+from datetime import datetime
 
 
 def checkArgv(arg):
@@ -133,7 +134,7 @@ def getLog(log_dir_name, sc_name):
         # if logs directory(!) doesn't exist, create it
         if not os.path.isdir(log_dir):
             os.makedirs(log_dir)
-        # open log file with prefix and time stamp (platform independent) in Append mode
+        # open log file with prefix and timestamp (platform independent) in Append mode
         log = open(os.path.join(log_dir, sc_name + "_" + getCurTime("%Y%m%d_%H-%M") + ".log"), "a")
         return log
     except (OSError, IOError) as err:
