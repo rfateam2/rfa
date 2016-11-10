@@ -27,11 +27,14 @@ def checkArgv(arg):
             try:
                 arg_item = x.split("=")
                 arg_item[0] = arg_item[0].lower()
-                if "--testrun" in arg_item[0]:
+                if "--testrun" == arg_item[0]:
                     arg_item[1] = arg_item[1]
                     if int(arg_item[1]) not in range(10001):
                         print "ERROR: The number of test case is out of range 1-10000"
                         return -1
+                else:
+                    print "ERROR: No '--testrun' argument"
+                    return -1
             except OSError as err:
                 print "ERROR: Failed to split arguments by '=': %s" % err
                 return -1
