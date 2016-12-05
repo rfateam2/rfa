@@ -1,7 +1,8 @@
 '''
 Created on Oct 19, 2016
+
 @author: sashaalexander
-@author: team 9
+@author: korvinca (team#2)
 '''
 
 import os
@@ -138,8 +139,9 @@ def getDbConnection(db_url, db_name, db_user, db_pass):
     try:
         conn = mysql.connector.connect(host=db_url,database=db_name,user=db_user,password=db_pass)
         if conn.is_connected():
-            print('Connected to MySQL database')
-        return conn
+            return conn
+        else:
+            return -1
     except Exception as err:
         print err.message
         return -1
@@ -203,7 +205,10 @@ def getHttpResponse(url, method, parameters=None):
     Inside of it, make a multiple code blocks for different HTTP methods: GET, POST, HEAD, DELETE, OPTIONS
     """
     method = method.upper()
-    #re.match("GET", method, re.IGNORECASE)
+    if parameters:
+        if type(parameters) is not dict:
+            print "Parameters %s is not real dictionary: %s" % (parameters, type(parameters))
+            return -1
     try:
         if method == 'GET':
             response = requests.get(url, params=parameters)
@@ -235,7 +240,7 @@ def getHttpResponseCode(response_object, indicator):
     elif indicator == 'int':
         response_code = int(response_code)
     else:
-        print ("Inappropriate indicator: %s. Expected 'string' or 'int'.", indicator)
+        print "Inappropriate indicator: %s. Expected 'string' or 'int'." % indicator
         return -1
     return response_code
 

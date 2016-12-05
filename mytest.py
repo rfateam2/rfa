@@ -5,19 +5,17 @@ Create a new python module, called mytest.py and write all test code (calls etc)
 Use a mySQL DB and local apache server for all
 
 @author: sashaalexander
-@author: korvinca
+@author: korvinca (team#2)
 '''
 import sys
-from rfaUtils import getLocalEnv, getDbConnection, getDbCursor, queryDb, checkEnv
-from rfaUtils import buildURL, getHttpResponse, getHttpResponseCode
+from rfaUtils import (getLocalEnv, getDbConnection, getDbCursor, queryDb, checkEnv, buildURL,
+                      getHttpResponse, getHttpResponseCode)
 
 
 # read properties
 localProperties = getLocalEnv('local.properties')
 if localProperties == -1:
     sys.exit('[ERROR]Could not read properties')
-if 'log_dir' not in localProperties.keys():
-    sys.exit("[ERROR]log_dir property is missing")
 
 # init properties
 server_url = localProperties['test_server_URL']
@@ -28,15 +26,20 @@ db_user = localProperties['db_user']
 db_pass = localProperties['db_pass']
 list_str = [server_url, "/", "/auth/whoami"]
 method = 'get'
+method_list = ["Get", "post", "HedD", "DELETE", "OPTIONS"]
 parameters = {"username": "user_name", "password": "user_password"}
 
+# check env.
 check_env = checkEnv(server_url)
 if check_env == -1:
     sys.exit("[ERROR] Connection to server failed")
 
+# get connector
 connector = getDbConnection(server_url, db_name, db_user, db_pass)
 if connector == -1:
     sys.exit("[ERROR] Connection to DB failed")
+else:
+    print('Connected to MySQL database')
 
 # get cursor
 cursor = getDbCursor(connector)
@@ -56,9 +59,19 @@ if server_port == "80":
     url = "http://" + url
 else:
     url = "https://" + url
+
+# single method test
 response = getHttpResponse(url, method, parameters)
+print response
 if response == -1:
     sys.exit("[ERROR] Getting response from URL failed")
+
+# tests for the list of methods
+for m in method_list:
+    response = getHttpResponse(url, method, parameters)
+    print response
+    if response == -1:
+        sys.exit("[ERROR] Getting response from URL failed")
 
 # get response code
 stringCode = getHttpResponseCode(response, 'string')
