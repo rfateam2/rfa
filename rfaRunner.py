@@ -5,7 +5,7 @@ Created on Oct 19, 2016
 @author: sashaalexander
 @author: nixer (team#2)
 '''
-from rfaUtils import getLog, qaPrint, getTestCases, getLocalEnv, checkArgv 
+from rfaUtils import getLog, qaPrint, getTestCases, getLocalEnv, checkArgv, getDbCursor, getDbConnection, buildURL
 import sys
 
 trid = checkArgv(sys.argv)

@@ -7,6 +7,12 @@ Created on Oct 19, 2016
 from datetime import datetime
 import os
 import sys
+import pymysql
+import pymysql.cursors
+import re
+import requests
+from symbol import parameters
+from dbus import connection
 
 def getLog(logdir, trid):
     """
@@ -113,3 +119,75 @@ def getTestCases(trid):
     except (OSError, IOError) as err:
         # return -1 in case of exception
         return (-1, err)
+    
+def getDbConnection(hst, db_id, lg, pw):
+    try:
+        connection = pymysql.connect(host=hst,
+                             user=lg,
+                             password=pw,
+                             db=db_id,
+                             charset='utf8mb4',
+                             cursorclass=pymysql.cursors.DictCursor)
+        return connection
+    except BaseException as er:
+        # return -1 in case of exception
+        return (-1, er)
+
+def getDbCursor(connection):
+    try:
+        cursor = connection.cursor()
+        return cursor
+    except BaseException as er:
+        # return -1 in case of exception
+        return (-1, er)
+    
+def queryDb():
+    pass
+
+def buildURL(str_list):
+    try:        
+        url_temp = str_list[0] + '/' + str_list[1] + '/' + str_list[2]
+        url = re.sub(r'/+', '/', url_temp)
+        return url
+    
+    except BaseException as er:
+        # return -1 in case of exception
+        return (-1, er)
+
+def getHttpResponse(url, method, parameters):
+    try:        
+        if method == 'GET':
+            r = requests.get(url, params=parameters)
+        elif method == 'POST':
+            r = requests.post(url, params=parameters)
+        elif method == 'HEAD':
+            r = requests.head(url)
+        elif method == 'DELETE':
+            r = requests.delete(url)
+        elif method == 'OPTIONS':
+            r = requests.options(url)
+        else:
+            print "Method does not exist:" + method
+            return -1
+        return r.text
+    except:
+        # return -1 in case of exception
+        return -1
+
+def getHttpResponseCode(res_object, indicator):
+    try:
+        if indicator == 'string':
+            code = str(res_object)
+            return code
+        elif indicator == 'int':
+            code = int(res_object)
+        else:
+            print "Wrong indicator:" + indicator
+            return -1
+        return code
+    except:
+        # return -1 in case of exception
+        return -1
+
+def checkEnv():
+    return True
