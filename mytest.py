@@ -26,7 +26,7 @@ db_user = localProperties['db_user']
 db_pass = localProperties['db_pass']
 list_str = [server_url, "/", "/auth/whoami"]
 method = 'get'
-method_list = ["Get", "post", "HedD", "DELETE", "OPTIONS"]
+method_list = ["Get", "post", "HedD", "DELETE", "OPTIONS", "CONNECT", "CONNECT"]
 parameters = {"username": "user_name", "password": "user_password"}
 
 # check env.
@@ -40,14 +40,15 @@ if connector == -1:
     sys.exit("[ERROR] Connection to DB failed")
 else:
     print('Connected to MySQL database')
-
 # get cursor
 cursor = getDbCursor(connector)
 if cursor == -1:
     sys.exit(-1)
-
-# select something from db
-queryDb(cursor, "SELECT * FROM products")
+else:
+    # select something from db
+    queryDb(cursor, "SELECT * FROM products")
+    # close cursor
+    cursor.close()
 
 # close connection
 if connector.is_connected:

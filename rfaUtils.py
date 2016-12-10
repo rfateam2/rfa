@@ -7,9 +7,9 @@ Created on Oct 19, 2016
 
 import os
 import sys
+from datetime import datetime
 import requests
 import mysql.connector
-from datetime import datetime
 
 
 def getLog(testName, logDir):
@@ -55,6 +55,10 @@ def getCurTime(date_time_format):
 
 
 def getLocalEnv(propertiesFileName):
+    """
+    Read the content of the file, and return a dictionary,
+    where 1 value of the file becomes key and second value becomes a value.
+    """
     try:
         properties = open(propertiesFileName, "r")
         props = {}
@@ -74,7 +78,7 @@ def getLocalEnv(propertiesFileName):
         return -1
 
 
-def getTestCases(testRunId,log):
+def getTestCases(testRunId, log):
     TEST_CASE_KEYS = ('rest_URL', 'HTTP_method', 'HTTP_RC_desired', 'param_list')
     testCases = {}
     try:
@@ -93,7 +97,7 @@ def getTestCases(testRunId,log):
                 #fill dict with keys from TEST_CASE_KEYS and slice of list , skipping 1st element - tcid
                 testCases[tc[0]] = dict(zip(TEST_CASE_KEYS, tc[1:]))
             else:
-                qaPrint(log,"[INFO]Duplicated tcid {}, skipping line".format(tc[0]))
+                qaPrint(log, "[INFO]Duplicated tcid {}, skipping line".format(tc[0]))
         if not testCasesFile.closed: testCasesFile.close()
         return testCases
     except Exception as ex:
@@ -102,7 +106,7 @@ def getTestCases(testRunId,log):
 
 
 def usage():
-    print ('[ERROR]Invalid parameters. Proper usage: rfaRunner.py --testrun=<testRunId>')
+    print '[ERROR]Invalid parameters. Proper usage: rfaRunner.py --testrun=<testRunId>'
 
 
 def closeLog(log):
@@ -206,8 +210,8 @@ def getHttpResponse(url, method, parameters=None):
     """
     method = method.upper()
     if parameters:
-        if type(parameters) is not dict:
-            print "Parameters %s is not real dictionary: %s" % (parameters, type(parameters))
+        if isinstance(parameters) is not dict:
+            print "Parameters %s is not real dictionary: %s" % (parameters, isinstance(parameters))
             return -1
     try:
         if method == 'GET':
@@ -219,6 +223,8 @@ def getHttpResponse(url, method, parameters=None):
         elif method == 'DELETE':
             response = requests.delete(url)
         elif method == 'OPTIONS':
+            response = requests.options(url)
+        elif method == 'CONNECT':
             response = requests.options(url)
         else:
             print ("Unsupported method: %s", method)
@@ -256,9 +262,9 @@ def checkEnv(server_url):
         print err.message
         return -1
 
-def _check_ping(server_URL):
+def _check_ping(server_url):
     """ Check server IP or URL availability and return True or -1 """
-    response = os.system("ping -c 1 " + server_URL)
+    response = os.system("ping -c 1 " + server_url)
     # and then check the response...
     if response == 0:
         return True
@@ -267,10 +273,8 @@ def _check_ping(server_URL):
 
 def _check_db(cursor):
     """ Check cursor is up """
-    try:
-        cursor.execute("SELECT VERSION()")
-        ver = cursor.fetchone()[0]
-        if ver is None:
-            return -1
-    except:
+    cursor.execute("SELECT VERSION()")
+    ver = cursor.fetchone()[0]
+    if ver is None:
         return -1
+
