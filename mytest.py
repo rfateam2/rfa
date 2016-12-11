@@ -26,7 +26,7 @@ db_user = localProperties['db_user']
 db_pass = localProperties['db_pass']
 list_str = [server_url + "/", "/auth/whoami/", ""]
 method = 'get'
-method_list = ["Get", "post", "HedD", "DELETE", "OPTIONS", "PUT"]
+method_list = ["Get", "post", "HedD", "DELETE", "OPTIONS", "PUT", "PATCH"]
 parameters = {"username": "user_name", "password": "user_password"}
 
 # check env.
@@ -61,6 +61,9 @@ if server_port == "80":
     url = "http://" + url
 elif server_port == "443":
     url = "https://" + url
+else:
+    print "We support only '80' and '443' ports now"
+    sys.exit(-1)
 
 # single method test
 response = getHttpResponse(url, method, parameters)
