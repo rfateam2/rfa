@@ -21,7 +21,6 @@ def getLog(testName, logDir):
     log_dir = os.path.join(os.getcwd(), logDir)
     # or --> script directory: log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs")
     # or --> user directory: log_dir = os.path.join(os.path.expanduser("~"), "logs")
-
     try:
         # if logs directory(!) doesn't exist, create it
         if not os.path.isdir(log_dir):
@@ -45,14 +44,12 @@ def qaPrint(log, message):
     # writes message to a log file
     log.write(log_message + "\n")
 
-
 def getCurTime(date_time_format):
     """
     Returns current date_time as a string formatted according to date_time_format
     """
     date_time = datetime.now().strftime(date_time_format)
     return date_time
-
 
 def getLocalEnv(propertiesFileName):
     """
@@ -64,9 +61,9 @@ def getLocalEnv(propertiesFileName):
         props = {}
         for line in properties:
             line = line.strip()
-            #skip line without "="
+            # skip line without "="
             if "=" not in line: continue
-            #skip comments
+            # skip comments
             if line.startswith("#"): continue
             k, v = line.split("=", 1)
             props[k] = v
@@ -77,24 +74,23 @@ def getLocalEnv(propertiesFileName):
         if not properties.closed: properties.close()
         return -1
 
-
 def getTestCases(testRunId, log):
     TEST_CASE_KEYS = ('rest_URL', 'HTTP_method', 'HTTP_RC_desired', 'param_list')
     testCases = {}
     try:
         testCasesFile = open(str(testRunId) + '.txt')
-        #loop through lines in file
+        # loop through lines in file
         for line in testCasesFile:
             line = line.strip()
-            #skip empty line
+            # skip empty line
             if line == '': continue
-            #skip comments
+            # skip comments
             if line.startswith("#"): continue
-            #convert last element to a list
+            # convert last element to a list
             tc = line.split("|")
             tc[-1] = tc[-1].split(',')
             if tc[0] not in testCases:
-                #fill dict with keys from TEST_CASE_KEYS and slice of list , skipping 1st element - tcid
+                # fill dict with keys from TEST_CASE_KEYS and slice of list, skipping 1st element - tcid
                 testCases[tc[0]] = dict(zip(TEST_CASE_KEYS, tc[1:]))
             else:
                 qaPrint(log, "[INFO]Duplicated tcid {}, skipping line".format(tc[0]))
@@ -104,17 +100,14 @@ def getTestCases(testRunId, log):
         print ex
         return -1
 
-
 def usage():
     print '[ERROR]Invalid parameters. Proper usage: rfaRunner.py --testrun=<testRunId>'
-
 
 def closeLog(log):
     # close the log file if it open
     if not log.closed:
         qaPrint(log, '[INFO]Test suite ends')
         log.close()
-
 
 def getArguments(args):
     arguments = {}
@@ -141,7 +134,7 @@ def getDbConnection(db_url, db_name, db_user, db_pass):
     NOTE: IT IS totally OK for us to use clear text passwords at this time everywhere
     """
     try:
-        conn = mysql.connector.connect(host=db_url,database=db_name,user=db_user,password=db_pass)
+        conn = mysql.connector.connect(host=db_url, database=db_name, user=db_user, password=db_pass)
         if conn.is_connected():
             return conn
         else:
@@ -160,7 +153,6 @@ def getDbCursor(connection):
     else:
         print "[ERROR] Getting cursor failed."
         return -1
-
 
 def queryDb(cursor, query):
     """
@@ -181,23 +173,21 @@ def buildURL(list_of_string):
     (-1 blah blah blah)
     Exam ple:
     Local test server is string 0: "myhost.com"
-    REST API Path is string 1: "files/show_all" string 2 is empty: ""
+    REST API Path is string 1: "files/show_all"
+    string 2 is empty: ""
     So, our string to return will be "myhost.com/files/show_all"
     Note that we've put a "/" in string. BUT ONLY if it isn't there already
     (hint: check first and last chars of string)
     """
-    if list_of_string[0][-1] is "/":
-        list_of_string[0] = list_of_string[0][:-1]
-    list_urls = []
+    if not isinstance(list_of_string, list):
+        print 'argument must be a list'
+        return -1
+    url_str = []
     try:
-        for x in list_of_string[1:]:
-            if x == "": continue
-            if x.strip()[0] is "/":
-                one_url = list_of_string[0] + x
-            else:
-                one_url = list_of_string[0] + "/" + x
-            list_urls.append(one_url)
-        return list_urls
+        for x in list_of_string:
+            url_str.append(_cleare_str(x, "/"))
+        url_str = "/".join(url_str)
+        return url_str
     except Exception as err:
         print err.message
         return -1
@@ -210,27 +200,29 @@ def getHttpResponse(url, method, parameters=None):
     """
     method = method.upper()
     if parameters:
-        if isinstance(parameters) is not dict:
-            print "Parameters %s is not real dictionary: %s" % (parameters, isinstance(parameters))
+        if not isinstance(parameters, dict):
+            print 'argument must be a dictionary'
             return -1
     try:
         if method == 'GET':
             response = requests.get(url, params=parameters)
         elif method == 'POST':
-            response = requests.post(url, params=parameters)
+            response = requests.post(url, data=parameters, json=None)
         elif method == 'HEAD':
             response = requests.head(url)
         elif method == 'DELETE':
             response = requests.delete(url)
         elif method == 'OPTIONS':
             response = requests.options(url)
-        elif method == 'CONNECT':
-            response = requests.options(url)
+        elif method == 'PUT':
+            response = requests.put(url, data=parameters)
+        elif method == 'PATCH':
+            response = requests.patch(url, data=parameters)
         else:
             print ("Unsupported method: %s", method)
             return -1
         return response
-    except Exception as err:
+    except IOError as err:
         print err.message
         return -1
 
@@ -278,3 +270,7 @@ def _check_db(cursor):
     if ver is None:
         return -1
 
+def _cleare_str(src_str, clear_sym):
+    """ Cleaning first and last symbol in the string"""
+    res_str = src_str.strip(clear_sym)
+    return res_str

@@ -24,9 +24,9 @@ db_name = localProperties["db_name"]
 db_port = localProperties['test_db_port']
 db_user = localProperties['db_user']
 db_pass = localProperties['db_pass']
-list_str = [server_url, "/", "/auth/whoami"]
+list_str = [server_url + "/", "/auth/whoami/", ""]
 method = 'get'
-method_list = ["Get", "post", "HedD", "DELETE", "OPTIONS", "CONNECT", "CONNECT"]
+method_list = ["Get", "post", "HedD", "DELETE", "OPTIONS", "PUT"]
 parameters = {"username": "user_name", "password": "user_password"}
 
 # check env.
@@ -46,6 +46,7 @@ if cursor == -1:
     sys.exit(-1)
 else:
     # select something from db
+    print "DB query. List of products in table products"
     queryDb(cursor, "SELECT * FROM products")
     # close cursor
     cursor.close()
@@ -55,22 +56,22 @@ if connector.is_connected:
     connector.close()
 
 # get response
-url = buildURL(list_str)[0]
+url = buildURL(list_str)
 if server_port == "80":
     url = "http://" + url
-else:
+elif server_port == "443":
     url = "https://" + url
 
 # single method test
 response = getHttpResponse(url, method, parameters)
-print response
+print "URL:", response.url
 if response == -1:
     sys.exit("[ERROR] Getting response from URL failed")
 
 # tests for the list of methods
 for m in method_list:
     response = getHttpResponse(url, method, parameters)
-    print response
+    print "Test list of methods:", m, response
     if response == -1:
         sys.exit("[ERROR] Getting response from URL failed")
 
@@ -78,8 +79,8 @@ for m in method_list:
 stringCode = getHttpResponseCode(response, 'string')
 if stringCode == -1:
     sys.exit("[ERROR] Getting stringCode failed")
-print response, type(stringCode)
+print "Test code 'string':", response, stringCode, type(stringCode)
 intCode = getHttpResponseCode(response, 'int')
 if stringCode == -1:
     sys.exit("[ERROR] Getting stringCode failed")
-print response, type(intCode)
+print "Test code 'integer':", response, stringCode, type(intCode)
